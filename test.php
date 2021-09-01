@@ -30,7 +30,7 @@ $ret = $client->getPin(1234);
 $balance = $client->getBalanceByCard();
 echo "Баланс: " . $balance. PHP_EOL;
 
-$putArray = array(100 => 3, 50 => 1, 10 => 1, 500 => 3);
+$putArray = array(100, 100, 50, 10, 500, 500, 500);
 $ret = $client->putMoney($putArray);
 
 $ret = $client->getMoney(860);
@@ -43,3 +43,5 @@ $client->transfer(2000000,2222333344445555);
 $client->transfer(220,2222333344445555);
 
 $client->logOff();
+
+$client->freeTransfer(array(200,10,50,100,100,500), 2222333344445555);

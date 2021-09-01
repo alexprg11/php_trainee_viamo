@@ -1,8 +1,8 @@
 <?php
 
 /**
-* Class for operations with banknotes in ATM
-*/
+ * Class for operations with banknotes in ATM
+ */
 class StorageException extends Exception { }
 
 function lackStorageException() {
@@ -34,10 +34,10 @@ class Storage {
     }
 
     /**
-    * Saving the results of banknote recalculation
-    * @param array $banknotes - array [banknote => count]
-    * @return int - sum all banknontes in storage
-    */
+     * Saving the results of banknote recalculation
+     * @param array $banknotes - array [banknote => count]
+     * @return int - sum all banknontes in storage
+     */
     private function setStorage(array $banknotes) {
         $this->storage = array();
         $this->storageSum = 0;
@@ -95,8 +95,21 @@ class Storage {
     }
 
     /**
-    *    Return the array with banknotes after deduction from the vault
-    */
+     * Sorting mixed array of banknotes
+     * @param array    [$banknotes]
+     * @return array - [$banknote => quantity]
+     */
+    protected function countBanknotes(array $banknotes) {
+        $result = array();
+        foreach($banknotes as $banknote) {
+            if (in_array($banknote, Storage::$banknotes)) @$result[$banknote] += 1;
+        }
+        return $result;
+    }
+
+    /**
+     *    Return the array with banknotes after deduction from the vault
+     */
     public function getSum(int $sum) {
         $arrayOfBanknotes = $this->checkSum($sum);
         
@@ -116,38 +129,16 @@ class Storage {
      * Need to ckeck free space in storage!
      */
     public function putSum(array $banknotes) {
+        $banknotes = $this->countBanknotes($banknotes);
+        var_dump($banknotes);
         $addSum = 0;
         foreach($banknotes as $banknote => $quantity) {
-            if (in_array($banknote, self::$banknotes)) {
-                $this->storage[$banknote] += $quantity;
-                $addSum += $banknote * $quantity;
-            }
+            $this->storage[$banknote] += $quantity;
+            $addSum += $banknote * $quantity;
         }
         $this->storageSum += $addSum;
         return $addSum;
     }
 }
-/*
-$initBanknotes = array(
-    10 => 1000,
-    20 => 1000,
-    50 => 1000,
-    100 => 1000,
-    200 => 1000,
-    500 => 1000,
-    1000 => 500
-);
-
-$stor = new Storage($initBanknotes);
-
-$sum = (int)readline("sum=");
-var_dump($sum);
-while($sum > 0)    {
-    $ret = $stor->getQuantityBanknote($sum);
-    var_dump($ret);
-    $sum = (int)readline("sum=");
-}
-
-*/
 
 ?>
